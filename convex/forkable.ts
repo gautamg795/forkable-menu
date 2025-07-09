@@ -22,7 +22,7 @@ function getDaysAhead(): number {
     hour: 'numeric',
     hour12: false,
   }).format(now);
-  
+
   const hour = parseInt(sfTime);
   return hour >= 13 ? 1 : 0; // Tomorrow if 1pm or later, otherwise today
 }
@@ -56,6 +56,7 @@ async function getForkableLunch(
 
   try {
     // Step 1: Login
+    console.log("Logging in to Forkable");
     const loginResponse = await fetch("https://forkable.com/api/v2/graphql", {
       method: "POST",
       headers: {
@@ -84,6 +85,8 @@ async function getForkableLunch(
       sessionCookie = cookies;
     }
 
+    console.log("Logged in to Forkable");
+
     // Step 2: Get lunch data
     const lunchQuery = {
       query: `query { 
@@ -106,6 +109,7 @@ async function getForkableLunch(
       lunchHeaders["Cookie"] = sessionCookie;
     }
 
+    console.log("Fetching lunch data");
     const lunchResponse = await fetch("https://forkable.com/api/v2/graphql", {
       method: "POST",
       headers: lunchHeaders,
@@ -140,6 +144,8 @@ async function getForkableLunch(
         }
       }
     }
+
+    console.log("Fetched lunch data");
 
     return {
       date: targetDateStr,
